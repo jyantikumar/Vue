@@ -1,10 +1,12 @@
 <script setup>
 import { ref } from 'vue';
+import { Link } from '@inertiajs/vue3'; // Import the Inertia Link
 import { 
-  Home, 
   LayoutDashboard, 
-  Settings, 
-  Users, 
+  FileText, // Added for RFP
+  Wallet,   // Added for Petty Cash
+  ClipboardList, // Added for Liquidation
+  BarChart, // Added for Reports
   ChevronLeft, 
   ChevronRight,
   LogOut 
@@ -12,12 +14,13 @@ import {
 
 const isCollapsed = ref(false);
 
+// Update navItems with your actual Laravel route names or URLs
 const navItems = [
-  { name: 'Dashboard', icon: LayoutDashboard, href: '#' },
-  { name: 'RFP', icon: null, href: '#' },
-  { name: 'Petty Cash', icon: null, href: '#' },
-  { name: 'Liquidation', icon: null, href: '#' },
-  { name: 'Reports', icon: null, href: '#' },
+  { name: 'Dashboard', icon: LayoutDashboard, href: route('dashboard') },
+  { name: 'RFP', icon: FileText, href: '/login' },
+  { name: 'Petty Cash', icon: Wallet, href: '/petty-cash' },
+  { name: 'Liquidation', icon: ClipboardList, href: '/liquidation' },
+  { name: 'Reports', icon: BarChart, href: '/reports' },
 ];
 </script>
 
@@ -41,28 +44,39 @@ const navItems = [
     </button>
   </div>
 
-    <nav class="flex-1 space-y-2">
-    <a 
-        v-for="item in navItems" 
-        :key="item.name" 
-        :href="item.href"
-        class="flex items-center w-52 hover:bg-[#dcdcdc] hover:text-[#515050] p-3 px-4 rounded-tr-xl rounded-br-xl transition-all group"
+  <nav class="flex-1 space-y-2">
+    <Link 
+      v-for="item in navItems" 
+      :key="item.name" 
+      :href="item.href"
+      :class="[
+        'flex items-center w-52 p-3 px-4 rounded-tr-xl rounded-br-xl transition-all group',
+        $page.url === item.href 
+          ? 'bg-[#dcdcdc] text-[#515050]' 
+          : 'hover:bg-[#dcdcdc] hover:text-[#515050]'
+      ]"
     >
-        <component :is="item.icon" :size="24" />
-        <span 
+      <component :is="item.icon" v-if="item.icon" :size="24" />
+      
+      <span 
         v-if="!isCollapsed" 
         class="ml-4 font-medium transition-opacity duration-200"
-        >
+      >
         {{ item.name }}
-        </span>
-    </a>
-    </nav>
+      </span>
+    </Link>
+  </nav>
 
   <div class="pt-4 border-t border-slate-800 px-4">
-    <button class="flex items-center w-full p-3 rounded-xl hover:bg-red-500/10 hover:text-red-500 transition-colors">
+    <Link 
+      :href="route('logout')" 
+      method="post" 
+      as="button" 
+      class="flex items-center w-full p-3 rounded-xl hover:bg-red-500/10 hover:text-red-500 transition-colors"
+    >
       <LogOut :size="24" />
       <span v-if="!isCollapsed" class="ml-4 font-medium">Logout</span>
-    </button>
+    </Link>
   </div>
 </aside>
 </template>
