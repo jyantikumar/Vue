@@ -1,26 +1,34 @@
 <script setup>
 import { ref } from 'vue';
-import { Link } from '@inertiajs/vue3'; // Import the Inertia Link
+import { Link } from '@inertiajs/vue3'; 
 import { 
+  Home, 
   LayoutDashboard, 
-  FileText, // Added for RFP
-  Wallet,   // Added for Petty Cash
-  ClipboardList, // Added for Liquidation
-  BarChart, // Added for Reports
+  Settings, 
+  Users, 
   ChevronLeft, 
   ChevronRight,
-  LogOut 
+  LogOut,
+  FileText,
+  Wallet,   
+  ClipboardList,  BarChart, 
 } from 'lucide-vue-next';
 
 const isCollapsed = ref(false);
 
-// Update navItems with your actual Laravel route names or URLs
 const navItems = [
   { name: 'Dashboard', icon: LayoutDashboard, href: route('dashboard') },
   { name: 'RFP', icon: FileText, href: '/login' },
   { name: 'Petty Cash', icon: Wallet, href: '/petty-cash' },
   { name: 'Liquidation', icon: ClipboardList, href: '/liquidation' },
   { name: 'Reports', icon: BarChart, href: '/reports' },
+  { name: 'Master List', icon:null, href:'#',
+    children:[
+      { name:'Users', icon:null, href:'#'},
+      {name:'Status', icon:null, href:'#'},
+      {name:'Companies', icon:null, href:'#'}
+    ]
+  },
 ];
 </script>
 
@@ -44,28 +52,37 @@ const navItems = [
     </button>
   </div>
 
-  <nav class="flex-1 space-y-2">
-    <Link 
-      v-for="item in navItems" 
-      :key="item.name" 
+   <nav class="flex-1 space-y-2">
+  <div v-for="item in navItems" :key="item.name" class="group/menu">
+    
+    <a 
       :href="item.href"
       :class="[
-        'flex items-center w-52 p-3 px-4 rounded-tr-xl rounded-br-xl transition-all group',
-        $page.url === item.href 
-          ? 'bg-[#dcdcdc] text-[#515050]' 
-          : 'hover:bg-[#dcdcdc] hover:text-[#515050]'
+        'flex items-center hover:bg-[#dcdcdc] hover:text-[#515050] p-3 transition-all',
+        isCollapsed ? 'justify-center w-12 h-12 mx-auto rounded-lg' : 'w-52 px-4 rounded-tr-xl rounded-br-xl'
       ]"
     >
       <component :is="item.icon" v-if="item.icon" :size="24" />
-      
-      <span 
-        v-if="!isCollapsed" 
-        class="ml-4 font-medium transition-opacity duration-200"
-      >
+      <span v-if="!isCollapsed" class="ml-4 font-medium transition-opacity duration-200">
         {{ item.name }}
       </span>
-    </Link>
-  </nav>
+    </a>
+
+    <div v-if="item.children && !isCollapsed" class="mt-1 ml-10 flex flex-col space-y-1">
+      <a 
+        v-for="child in item.children" 
+        :key="child.name"
+        :href="child.href"
+        :class="[
+        'flex items-center hover:bg-[#dcdcdc] hover:text-[#515050] p-3 transition-all',
+        isCollapsed ? 'justify-center w-12 h-12 mx-auto rounded-lg' : 'w-52 px-4 rounded-tr-xl rounded-br-xl'
+      ]"      >
+        {{ child.name }}
+      </a>
+    </div>
+    
+  </div>
+</nav>
 
   <div class="pt-4 border-t border-slate-800 px-4">
     <Link 
@@ -73,10 +90,10 @@ const navItems = [
       method="post" 
       as="button" 
       class="flex items-center w-full p-3 rounded-xl hover:bg-red-500/10 hover:text-red-500 transition-colors"
-    >
+    >                
       <LogOut :size="24" />
       <span v-if="!isCollapsed" class="ml-4 font-medium">Logout</span>
-    </Link>
+  </Link>
   </div>
 </aside>
 </template>
