@@ -20,9 +20,12 @@ class AccountsManager extends Controller
 {
     public function create(): Response
     {
+        $accounts = Account::filtered()
+            ->with('parent')
+            ->get();
+
         return Inertia::render('TestAccounts/AddAccount', [
-            'accounts' => Account::where('is_deactivated', false)
-            ->select('id', 'account_name')->get(),
+            'accounts' => $accounts
         ]);
     }
     
@@ -32,6 +35,8 @@ class AccountsManager extends Controller
             'account_name' => 'required|string|max:255',
             'parent_id' => 'nullable|exists:accounts,id',
         ]);
+
+        $level = 1;
 
         if ($request->filled('parent_id')) {
             $parent = Account::findOrFail($request->parent_id);
@@ -50,7 +55,7 @@ class AccountsManager extends Controller
             'is_deactivated' => false,
         ]);
 
-        return Redirect::route('dashboard')->with('message', 'Account created successfully!');
+        return Redirect::route('accounts.create')->with('message', 'Account created successfully!');
     }
 
     public function update(Request $request, Account $account): RedirectResponse

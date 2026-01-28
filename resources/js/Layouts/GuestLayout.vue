@@ -13,7 +13,11 @@ import { Link } from '@inertiajs/vue3';
     isCollapsed ? 'w-20' : 'w-64'
   ]">
         <div v-if="!isCollapsed" class="font-bold text-xl text-white truncate">
-            El<span class="text-[#87af49]">ite</span>
+            <img 
+                src="/logo.png" 
+                alt="Logo" 
+                class="h-8 w-auto object-contain transition-opacity duration-300"
+            />
         </div>
     </div>
 

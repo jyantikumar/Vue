@@ -11,8 +11,8 @@ const props = defineProps({
 });
 
 const form = useForm({
-    account_name: '',
-    parent_id: '',
+    account_name: props.account?.account_name ?? '',
+    parent_id: props.account?.parent_id ?? '',
 });
 
 const submit = () => {
@@ -29,7 +29,7 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
+    <h1>CREATE ACCOUNT</h1>
         <Head title="Add Account" />
 
         <form @submit.prevent="submit">
@@ -56,12 +56,10 @@ const submit = () => {
                     id="parent_id"
                     v-model="form.parent_id"
                     class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm text-gray-700"
-                    required
                 >
-                    <option value="">Select a parent account</option>
                     <option value="">None</option>
                     <option v-for="parent in accounts" :key="parent.id" :value="parent.id">
-                        {{ parent.account_name }}
+                        {{ parent.full_account_name  }}
                     </option>
                 </select>
 
@@ -78,5 +76,4 @@ const submit = () => {
                 </PrimaryButton>
             </div>
         </form>
-    </GuestLayout>
 </template>

@@ -16,7 +16,7 @@ const props = defineProps({
 const form = useForm({
     account_name: props.account?.account_name ?? '',
     parent_id: props.account?.parent_id ?? '',
-    is_deactivated: !!props.account?.is_deactivated, // Convert to boolean
+    is_deactivated: !!props.account?.is_deactivated,
 });
 
 const submit = () => {
@@ -29,7 +29,7 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
+    <h1>EDIT ACCOUNT</h1>
         <Head title="Edit Account Details" />
 
         <form @submit.prevent="submit">
@@ -95,5 +95,4 @@ const submit = () => {
                 </PrimaryButton>
             </div>
         </form>
-    </GuestLayout>
 </template>
