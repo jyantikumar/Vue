@@ -9,6 +9,13 @@ return Application::configure(basePath: dirname(__DIR__))
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
+        then: function () {
+            // This adds your custom admin routes
+            Route::middleware('web') // Or a custom 'admin' middleware
+                ->prefix('accounts')
+                ->name('accounts.')
+                ->group(base_path('routes/accounts.php'));
+        },
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->web(append: [
